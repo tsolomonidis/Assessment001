@@ -1,0 +1,257 @@
+/*
+Homework 1 
+A. We need a class Rectangle for a geometry application. Each rectangle has width and 
+height. We want to be able to draw the rectangle.  
+For example, if a rectangle has width 10 and height 5, it should be drawn like this: 
+* * * * * * * * * * 
+*                 *     
+*                 *       
+*                 *         
+* * * * * * * * * * 
+Write a main function in a class Geometry to use and test the rectangle class: 
+Rectangle r1 = new Rectangle(10, 5); 
+Rectangle r2 = new Rectangle(6, 8); 
+r1.draw(); 
+r2.draw();
+*/
+
+class Rectangle {
+    private int width;
+    private int height;
+
+    public Rectangle(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    public void draw() {
+        for (int i = 0; i < height; i++) {
+            if (i == 0 || i == height - 1) {
+                for (int j = 0; j < width; j++) {
+                    System.out.print("* ");
+                }
+            } else {
+                System.out.print("* ");
+                for (int j = 0; j < width - 2; j++) {
+                    System.out.print("  ");
+                }
+                System.out.print("* ");
+            }
+            System.out.println();
+        }
+    }
+}
+
+public class Geometry {
+    public static void main(String[] args) {
+        Rectangle r1 = new Rectangle(10, 5);
+        Rectangle r2 = new Rectangle(6, 8);
+        r1.draw();
+        System.out.println();
+        r2.draw();
+    }
+}
+
+/*
+B. PET CLINIC 
+
+A pet clinic needs to keep track of all the pets that visit the clinic. For each pet they keep 
+the specie (dog, cat, duck, rabbit, turtle, etc), and the name of the pet. 
+
+a. Design and implement the Pet class.  
+b. Write a class PetClinic with a main function. Create an array of 10 pets and then 
+
+ask user for a type and find and display the names of the pets of this type. At the 
+end, display the total number of pets of the type found. 
+Pet [] pets = new Pet[10]; 
+pets[0] = new Pet(“dog”, “Pluto”); 
+// etc 
+Give type: dog 
+- Pluto 
+- Jack 
+- Milou 
+Total animals of dog type: 3. 
+*/
+
+import java.util.Scanner;
+
+class Pet {
+    private String specie;
+    private String name;
+
+    public Pet(String specie, String name) {
+        this.specie = specie;
+        this.name = name;
+    }
+
+    public String getSpecie() {
+        return specie;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+
+public class PetClinic {
+    public static void main(String[] args) {
+        Pet[] pets = new Pet[10];
+        pets[0] = new Pet("dog", "Pluto");
+        pets[1] = new Pet("cat", "Whiskers");
+        pets[2] = new Pet("dog", "Jack");
+        pets[3] = new Pet("duck", "Daffy");
+        pets[4] = new Pet("dog", "Milou");
+        pets[5] = new Pet("rabbit", "Bugs");
+        pets[6] = new Pet("cat", "Felix");
+        pets[7] = new Pet("turtle", "Leonardo");
+        pets[8] = new Pet("duck", "Donald");
+        pets[9] = new Pet("rabbit", "Thumper");
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Give type: ");
+        String type = scanner.nextLine();
+
+        int count = 0;
+        for (Pet pet : pets) {
+            if (pet.getSpecie().equalsIgnoreCase(type)) {
+                System.out.println("- " + pet.getName());
+                count++;
+            }
+        }
+
+        System.out.println("Total animals of " + type + " type: " + count);
+    }
+}
+/*
+C. CAR RENTAL 
+
+You are working for an application of a Car Rental business. This business has a fleet of 
+cars. For each car they keep the plate number, the model, the number of kilometers 
+(km), and if it is rented or not.  
+
+a. Design and implement a class Car to represent any car of the company. When a new 
+car is created, we know the plate number, the model, and the km, while the rented value 
+is false (not rented). The system needs to be able to change the set a car as rented, or to 
+return a car. On return, the value of the km should be updated to whatever the odometer 
+of the car indicates.   
+
+b. Write a class CarRental with a main function that will generate an array of 5 cars. 
+Then display a menu to 
+(1) rent a car (user gives the plate number and if available rent it, 
+else display that the car is not available), 
+(2) return a car (user gives the plate number 
+and new value of km, and if the car is rented, status will change and km will be updated 
+to the new value), 
+(3) display all cars. 
+*/
+
+import java.util.Scanner;
+
+class Car {
+    private String plate;
+    private String model;
+    private int km;
+    private boolean rented;
+
+    public Car(String plate, String model, int km) {
+        this.plate = plate;
+        this.model = model;
+        this.km = km;
+        this.rented = false;
+    }
+
+    public String getPlate() {
+        return plate;
+    }
+
+    public boolean isRented() {
+        return rented;
+    }
+
+    public void rent() {
+        rented = true;
+    }
+
+    public void returnCar(int newKm) {
+        km = newKm;
+        rented = false;
+    }
+
+    public void display() {
+        System.out.println("Plate: " + plate + ", Model: " + model + ", KM: " + km + ", Rented: " + rented);
+    }
+}
+
+public class CarRental {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Car[] cars = {
+            new Car("ABC123", "Toyota", 12000),
+            new Car("XYZ456", "Honda", 9500),
+            new Car("LMN789", "Ford", 8000),
+            new Car("DEF321", "BMW", 15000),
+            new Car("GHI654", "Audi", 10500)
+        };
+
+        while (true) {
+            System.out.println("\nMenu:");
+            System.out.println("1. Rent a car");
+            System.out.println("2. Return a car");
+            System.out.println("3. Display all cars");
+            System.out.println("4. Exit");
+            System.out.print("Choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();  // consume newline
+
+            if (choice == 1) {
+                System.out.print("Enter plate number: ");
+                String plate = scanner.nextLine();
+                boolean found = false;
+                for (Car car : cars) {
+                    if (car.getPlate().equalsIgnoreCase(plate)) {
+                        found = true;
+                        if (!car.isRented()) {
+                            car.rent();
+                            System.out.println("Car rented.");
+                        } else {
+                            System.out.println("Car is not available.");
+                        }
+                        break;
+                    }
+                }
+                if (!found) System.out.println("Car not found.");
+
+            } else if (choice == 2) {
+                System.out.print("Enter plate number: ");
+                String plate = scanner.nextLine();
+                boolean found = false;
+                for (Car car : cars) {
+                    if (car.getPlate().equalsIgnoreCase(plate)) {
+                        found = true;
+                        if (car.isRented()) {
+                            System.out.print("Enter new km: ");
+                            int newKm = scanner.nextInt();
+                            car.returnCar(newKm);
+                            System.out.println("Car returned.");
+                        } else {
+                            System.out.println("Car is not currently rented.");
+                        }
+                        break;
+                    }
+                }
+                if (!found) System.out.println("Car not found.");
+
+            } else if (choice == 3) {
+                for (Car car : cars) {
+                    car.display();
+                }
+
+            } else if (choice == 4) {
+                break;
+
+            } else {
+                System.out.println("Invalid choice.");
+            }
+        }
+    }
+}

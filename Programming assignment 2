@@ -1,0 +1,65 @@
+// --- Programming assignment 2 ---
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+
+class HangmanGame extends JFrame {
+    private String word = "hangman";
+    private char[] displayed;
+    private int errors = 0;
+    private JLabel wordLabel;
+    private JTextField inputField;
+
+    public HangmanGame() {
+        setTitle("Hangman Game");
+        setSize(400, 300);
+        setLayout(new FlowLayout());
+
+        displayed = new char[word.length()];
+        for (int i = 0; i < word.length(); i++) {
+            displayed[i] = (i == 0 || i == word.length() - 1) ? word.charAt(i) : '-';
+        }
+
+        wordLabel = new JLabel(String.valueOf(displayed));
+        add(wordLabel);
+
+        inputField = new JTextField(1);
+        add(inputField);
+
+        JButton guessButton = new JButton("Guess");
+        add(guessButton);
+
+        guessButton.addActionListener(e -> {
+            String input = inputField.getText();
+            if (input.length() == 1) {
+                char guess = input.charAt(0);
+                boolean found = false;
+                for (int i = 1; i < word.length() - 1; i++) {
+                    if (word.charAt(i) == guess) {
+                        displayed[i] = guess;
+                        found = true;
+                    }
+                }
+                if (!found) {
+                    errors++;
+                }
+                wordLabel.setText(String.valueOf(displayed));
+                if (String.valueOf(displayed).equals(word)) {
+                    JOptionPane.showMessageDialog(this, "You won!");
+                } else if (errors >= 6) {
+                    JOptionPane.showMessageDialog(this, "Game Over. Word was: " + word);
+                }
+            }
+            inputField.setText("");
+        });
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new HangmanGame();
+    }
+}

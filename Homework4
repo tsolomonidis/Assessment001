@@ -1,0 +1,114 @@
+// === Homework 4 ===
+// You are hired by a coffee-shop which wants to keep track of their orders. 
+// For each order they keep the customer's name, the total amount paid, and the date in the form yyyy/mm/dd (e.g. 2025/03/11).
+// The application will provide a menu with the following options: 
+// 1. Add Order
+// 2. View orders of a date
+// 3. View total amount of a customer
+// 0. Exit. 
+//
+// The coffee-shop wants the application to be able to store and retrieve data either from a CSV file or from a MySQL database. 
+// Both options should be available and they will choose which one to use.
+//
+// A. Design the necessary classes for this problem and their dependencies. 
+// B. Implement the system. 
+
+// Order.java
+class Order {
+    String customer;
+    double amount;
+    String date;
+
+    public Order(String customer, double amount, String date) {
+        this.customer = customer;
+        this.amount = amount;
+        this.date = date;
+    }
+}
+
+// OrderManager.java
+interface OrderManager {
+    void addOrder(Order order);
+    List<Order> getOrdersByDate(String date);
+    double getTotalForCustomer(String customer);
+}
+
+// CSVOrderManager.java
+import java.io.*;
+import java.util.*;
+
+class CSVOrderManager implements OrderManager {
+    private String filename = "orders.csv";
+
+    public void addOrder(Order order) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(filename, true))) {
+            pw.println(order.customer + "," + order.amount + "," + order.date);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Order> getOrdersByDate(String date) {
+        List<Order> list = new ArrayList<>();
+        try (Scanner sc = new Scanner(new File(filename))) {
+            while (sc.hasNextLine()) {
+                String[] parts = sc.nextLine().split(",");
+                if (parts[2].equals(date)) list.add(new Order(parts[0], Double.parseDouble(parts[1]), parts[2]));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public double getTotalForCustomer(String customer) {
+        double total = 0;
+        try (Scanner sc = new Scanner(new File(filename))) {
+            while (sc.hasNextLine()) {
+                String[] parts = sc.nextLine().split(",");
+                if (parts[0].equalsIgnoreCase(customer)) total += Double.parseDouble(parts[1]);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+}
+
+// OrderApp.java
+import java.util.*;
+
+public class OrderApp {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        OrderManager manager = new CSVOrderManager();
+        int choice;
+
+        do {
+            System.out.println("1. Add Order\n2. View orders of a date\n3. View total amount of a customer\n0. Exit");
+            choice = sc.nextInt(); sc.nextLine();
+            switch (choice) {
+                case 1:
+                    System.out.print("Customer name: ");
+                    String customer = sc.nextLine();
+                    System.out.print("Amount: ");
+                    double amount = sc.nextDouble(); sc.nextLine();
+                    System.out.print("Date (yyyy/mm/dd): ");
+                    String date = sc.nextLine();
+                    manager.addOrder(new Order(customer, amount, date));
+                    break;
+                case 2:
+                    System.out.print("Date: ");
+                    date = sc.nextLine();
+                    for (Order o : manager.getOrdersByDate(date))
+                        System.out.println(o.customer + " - " + o.amount);
+                    break;
+                case 3:
+                    System.out.print("Customer name: ");
+                    customer = sc.nextLine();
+                    System.out.println("Total: " + manager.getTotalForCustomer(customer));
+                    break;
+            }
+        } while (choice != 0);
+    }
+}

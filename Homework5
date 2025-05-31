@@ -1,0 +1,106 @@
+// === Homework 5 ===
+// Build an application for preschool training. The application will present the image of an animal
+// and the user must provide the first letter - e.g. for Horse, H. 
+// Have at least 3 different options. If you want, have images for each letter in the alphabet.
+
+// Animal.java
+public class Animal {
+    private String name;
+    private char initial;
+    private String imagePath; 
+
+    public Animal(String name, String imagePath) {
+        this.name = name;
+        this.imagePath = imagePath;
+        this.initial = Character.toUpperCase(name.charAt(0));
+    }
+
+    public String getName() { return name; }
+    public char getInitial() { return initial; }
+    public String getImagePath() { return imagePath; }
+}
+
+// PreschoolTrainer.java
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+
+public class PreschoolTrainer extends JFrame {
+    private ArrayList<Animal> animals;
+    private int currentIndex = 0;
+
+    private JLabel imageLabel;
+    private JTextField inputField;
+    private JButton checkButton, nextButton;
+    private JLabel feedbackLabel;
+
+    public PreschoolTrainer() {
+        setTitle("Preschool Letter Training");
+        setSize(400, 350);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        animals = new ArrayList<>();
+        animals.add(new Animal("Horse", "horse.png"));
+        animals.add(new Animal("Cat", "cat.png"));
+        animals.add(new Animal("Elephant", "elephant.png"));
+
+        imageLabel = new JLabel();
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
+        imageLabel.setPreferredSize(new Dimension(300, 200));
+        updateImage();
+
+        JPanel centerPanel = new JPanel();
+        inputField = new JTextField(2);
+        checkButton = new JButton("Check");
+        nextButton = new JButton("Next");
+        feedbackLabel = new JLabel(" ");
+        feedbackLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        checkButton.addActionListener(e -> checkAnswer());
+        nextButton.addActionListener(e -> showNext());
+
+        centerPanel.add(inputField);
+        centerPanel.add(checkButton);
+        centerPanel.add(nextButton);
+
+        add(imageLabel, BorderLayout.NORTH);
+        add(centerPanel, BorderLayout.CENTER);
+        add(feedbackLabel, BorderLayout.SOUTH);
+
+        setVisible(true);
+    }
+
+    private void updateImage() {
+        Animal animal = animals.get(currentIndex);
+        imageLabel.setText(animal.getName()); // Placeholder instead of actual image
+        // To use real image: imageLabel.setIcon(new ImageIcon(animal.getImagePath()));
+    }
+
+    private void checkAnswer() {
+        String input = inputField.getText().toUpperCase();
+        if (input.length() != 1) {
+            feedbackLabel.setText("Enter one letter.");
+            return;
+        }
+        char inputChar = input.charAt(0);
+        Animal animal = animals.get(currentIndex);
+        if (inputChar == animal.getInitial()) {
+            feedbackLabel.setText(inputChar + " is correct for " + animal.getName() + "!");
+        } else {
+            feedbackLabel.setText("Try again. " + inputChar + " is not correct.");
+        }
+    }
+
+    private void showNext() {
+        currentIndex = (currentIndex + 1) % animals.size();
+        inputField.setText("");
+        feedbackLabel.setText(" ");
+        updateImage();
+    }
+
+    public static void main(String[] args) {
+        new PreschoolTrainer();
+    }
+}

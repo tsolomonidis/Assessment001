@@ -1,0 +1,96 @@
+// --- Programming assignment 1 ---
+
+import java.util.*;
+
+abstract class Product {
+    String name;
+    double price;
+
+    public Product(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public abstract void display();
+}
+
+class Electronics extends Product {
+    String brand;
+    int warrantyMonths;
+
+    public Electronics(String name, double price, String brand, int warrantyMonths) {
+        super(name, price);
+        this.brand = brand;
+        this.warrantyMonths = warrantyMonths;
+    }
+
+    public void display() {
+        System.out.println("Electronics: " + name + ", Brand: " + brand + ", Warranty: " + warrantyMonths + " months, Price: " + price);
+    }
+}
+
+class Clothing extends Product {
+    String size, material, color;
+
+    public Clothing(String name, double price, String size, String material, String color) {
+        super(name, price);
+        this.size = size;
+        this.material = material;
+        this.color = color;
+    }
+
+    public void display() {
+        System.out.println("Clothing: " + name + ", Size: " + size + ", Material: " + material + ", Color: " + color + ", Price: " + price);
+    }
+}
+
+class Grocery extends Product {
+    double weight;
+    String expirationDate;
+
+    public Grocery(String name, double price, double weight, String expirationDate) {
+        super(name, price);
+        this.weight = weight;
+        this.expirationDate = expirationDate;
+    }
+
+    public void display() {
+        System.out.println("Grocery: " + name + ", Weight: " + weight + "kg, Expiry: " + expirationDate + ", Price: " + price);
+    }
+}
+
+class InventorySystem {
+    static List<Product> inventory = new ArrayList<>();
+
+    public static void addProduct(Product p) {
+        inventory.add(p);
+    }
+
+    public static void searchProduct(String name) {
+        for (Product p : inventory) {
+            if (p.name.equalsIgnoreCase(name)) {
+                p.display();
+                return;
+            }
+        }
+        System.out.println("Product not found.");
+    }
+
+    public static void displayAll() {
+        for (Product p : inventory) {
+            p.display();
+        }
+    }
+
+    public static void main(String[] args) {
+        addProduct(new Electronics("Laptop", 1000, "Dell", 24));
+        addProduct(new Clothing("T-Shirt", 20, "L", "Cotton", "Red"));
+        addProduct(new Grocery("Milk", 1.5, 1.0, "2025-01-01"));
+
+        System.out.println("All Products:");
+        displayAll();
+
+        System.out.println("\nSearch Product 'T-Shirt':");
+        searchProduct("T-Shirt");
+    }
+}

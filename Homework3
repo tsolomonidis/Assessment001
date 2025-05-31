@@ -1,0 +1,89 @@
+// === Homework 3 ===
+// An e-shop selling books wants to display all their products to the users. Books can be printed, digital (pdf, e-pub, kindle), or audiobooks. 
+// All books have an ISBN code, a title, price, and the author.
+// Additionally:
+// Printed: Can be hardcover or paperback - Number of pages - publisher - available copies
+// Digital: Size in kb
+// Audiobook: Duration in minutes - Narrator
+//
+// Design the necessary classes to implement this application
+// Implement the application and create a class BookStore with a main function to display the list of all books.
+
+// Book.java
+abstract class Book {
+    protected String isbn, title, author;
+    protected double price;
+
+    public Book(String isbn, String title, String author, double price) {
+        this.isbn = isbn;
+        this.title = title;
+        this.author = author;
+        this.price = price;
+    }
+
+    public abstract void display();
+}
+
+// PrintedBook.java
+class PrintedBook extends Book {
+    private boolean hardcover;
+    private int pages;
+    private String publisher;
+    private int copies;
+
+    public PrintedBook(String isbn, String title, String author, double price, boolean hardcover, int pages, String publisher, int copies) {
+        super(isbn, title, author, price);
+        this.hardcover = hardcover;
+        this.pages = pages;
+        this.publisher = publisher;
+        this.copies = copies;
+    }
+
+    public void display() {
+        System.out.println("Printed Book: " + title + " [" + (hardcover ? "Hardcover" : "Paperback") + "] - " + pages + " pages - " + publisher + " - Copies: " + copies);
+    }
+}
+
+// DigitalBook.java
+class DigitalBook extends Book {
+    private int sizeKb;
+
+    public DigitalBook(String isbn, String title, String author, double price, int sizeKb) {
+        super(isbn, title, author, price);
+        this.sizeKb = sizeKb;
+    }
+
+    public void display() {
+        System.out.println("Digital Book: " + title + " - Size: " + sizeKb + " KB");
+    }
+}
+
+// AudioBook.java
+class AudioBook extends Book {
+    private int durationMin;
+    private String narrator;
+
+    public AudioBook(String isbn, String title, String author, double price, int durationMin, String narrator) {
+        super(isbn, title, author, price);
+        this.durationMin = durationMin;
+        this.narrator = narrator;
+    }
+
+    public void display() {
+        System.out.println("Audiobook: " + title + " - Duration: " + durationMin + " min - Narrator: " + narrator);
+    }
+}
+
+// BookStore.java
+import java.util.*;
+
+public class BookStore {
+    public static void main(String[] args) {
+        ArrayList<Book> books = new ArrayList<>();
+        books.add(new PrintedBook("1111", "Java Basics", "Alice", 29.99, true, 300, "TechBooks", 10));
+        books.add(new DigitalBook("2222", "Python Guide", "Bob", 15.99, 5000));
+        books.add(new AudioBook("3333", "History of Rome", "Charles", 19.99, 120, "David"));
+
+        for (Book b : books) b.display();
+    }
+}

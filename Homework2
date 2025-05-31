@@ -1,0 +1,90 @@
+// === Homework 2 ===
+// You are allocated the task to build a system for the Football League of Elbonia (*).
+//
+// The system needs to keep track of the game results. For each game the system will 
+// keep: the home team, the away team, the score of the home team and the score of the 
+// away team.  
+//
+// A menu will provide the user interface as following: 
+//
+// 1. Add Game 
+// 2. Team Performance 
+// 0. Exit 
+//
+// (1) The system will ask the names of both teams and the goals scored by each team. 
+//
+// (2) The system will ask the name of a team and then will find and display total wins, 
+// losses, and draws.  
+//
+// (0) The program will terminate. 
+//
+// Design the classes you will need for this application, then implement the application. 
+//
+// (*) an imaginary country from the Dilbert (IT related) cartoons.
+
+// Game.java
+public class Game {
+    String homeTeam;
+    String awayTeam;
+    int homeScore;
+    int awayScore;
+
+    public Game(String homeTeam, String awayTeam, int homeScore, int awayScore) {
+        this.homeTeam = homeTeam;
+        this.awayTeam = awayTeam;
+        this.homeScore = homeScore;
+        this.awayScore = awayScore;
+    }
+
+    public boolean involvesTeam(String team) {
+        return homeTeam.equalsIgnoreCase(team) || awayTeam.equalsIgnoreCase(team);
+    }
+
+    public boolean isWin(String team) {
+        if (homeTeam.equalsIgnoreCase(team)) return homeScore > awayScore;
+        if (awayTeam.equalsIgnoreCase(team)) return awayScore > homeScore;
+        return false;
+    }
+
+    public boolean isLoss(String team) {
+        if (homeTeam.equalsIgnoreCase(team)) return homeScore < awayScore;
+        if (awayTeam.equalsIgnoreCase(team)) return awayScore < homeScore;
+        return false;
+    }
+
+    public boolean isDraw(String team) {
+        return involvesTeam(team) && homeScore == awayScore;
+    }
+}
+
+// LeagueApp.java
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class LeagueApp {
+    static ArrayList<Game> games = new ArrayList<>();
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\n--- Elbonia Football League ---");
+            System.out.println("1. Add Game");
+            System.out.println("2. Team Performance");
+            System.out.println("0. Exit");
+            System.out.print("Choose: ");
+            choice = sc.nextInt(); sc.nextLine();
+
+            switch (choice) {
+                case 1:
+                    addGame(sc);
+                    break;
+                case 2:
+                    viewTeamPerformance(sc);
+                    break;
+                case 0:
+                    System.out.println("Goodbye!");
+                    break;
+                default:
+                    System.out.println("Invalid option.");
